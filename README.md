@@ -83,11 +83,11 @@ npm install @devbolt/sdk
 ```
 
 ```ts
-import { initialize } from '@devbolt/sdk'
+import { initialize } from "@devbolt/sdk";
 
-const client = initialize()
+const client = initialize();
 
-if (client.isEnabled('new_feature')) {
+if (client.isEnabled("new_feature")) {
   // new feature
 }
 ```
@@ -111,28 +111,26 @@ if client.is_enabled("new_feature"):
 
 ## Features
 
-- Boolean flags  
-- Deterministic percentage rollouts  
-- Rich targeting with many operators  
-- Environment overrides  
-- Auto reload in development  
-- Type safe APIs  
-- Zero external services required  
+- Boolean flags
+- Deterministic percentage rollouts
+- Rich targeting with many operators
+- Environment overrides
+- Auto reload in development
+- Type safe APIs
+- Zero external services required
 
 ---
 
 ## Comparison With Hosted Services
 
-| Feature                     | DevBolt | LaunchDarkly | Split.io |
-|-----------------------------|---------|--------------|----------|
-| Cost                        | Free 😇 | $$$$         | $$$$     |
-| Works offline               | Yes     | No           | No       |
-| Git native config          | Yes     | Partial      | No       |
-| Simple CLI                 | Yes     | No           | No       |
-| Deterministic rollouts     | Yes     | Yes          | Yes      |
-| Self hosted infrastructure | Not needed | Needed for enterprise | Needed |
-
-No shade. Just facts. And some cash sign emojis.
+| Feature                    | DevBolt    | LaunchDarkly          | Split.io |
+| -------------------------- | ---------- | --------------------- | -------- |
+| Cost                       | Free 😇    | $$$$                  | $$$$     |
+| Works offline              | Yes        | No                    | No       |
+| Git native config          | Yes        | Partial               | No       |
+| Simple CLI                 | Yes        | No                    | No       |
+| Deterministic rollouts     | Yes        | Yes                   | Yes      |
+| Self hosted infrastructure | Not needed | Needed for enterprise | Needed   |
 
 ---
 
@@ -156,6 +154,6 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Support
 
-- Documentation  
-- Discussions  
-- Issue Tracker  
+- Documentation
+- Discussions
+- Issue Tracker
