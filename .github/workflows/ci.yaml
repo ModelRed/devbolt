@@ -222,6 +222,9 @@ jobs:
           test -d packages/sdk-js/dist || exit 1
           test -d packages/cli/dist || exit 1
 
+  ###########################################################################
+  # NPM Publish (only publish packages whose version is NOT on npm)
+  ###########################################################################
   publish-npm:
     name: Publish to NPM
     runs-on: ubuntu-latest
@@ -254,27 +257,54 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Publish @devbolt/core
+      - name: Publish @devbolt/core if new
         run: |
-          cd packages/core
-          npm publish --provenance --access public
+          PACKAGE="@devbolt/core"
+          VERSION=$(node -p "require('./packages/core/package.json').version")
+          echo "Checking $PACKAGE@$VERSION"
+          if npm view "$PACKAGE@$VERSION" > /dev/null 2>&1; then
+            echo "$PACKAGE@$VERSION already exists on npm, skipping publish"
+          else
+            echo "Publishing $PACKAGE@$VERSION"
+            cd packages/core
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @devbolt/sdk
+      - name: Publish @devbolt/sdk if new
         run: |
-          cd packages/sdk-js
-          npm publish --provenance --access public
+          PACKAGE="@devbolt/sdk"
+          VERSION=$(node -p "require('./packages/sdk-js/package.json').version")
+          echo "Checking $PACKAGE@$VERSION"
+          if npm view "$PACKAGE@$VERSION" > /dev/null 2>&1; then
+            echo "$PACKAGE@$VERSION already exists on npm, skipping publish"
+          else
+            echo "Publishing $PACKAGE@$VERSION"
+            cd packages/sdk-js
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @devbolt/cli
+      - name: Publish @devbolt/cli if new
         run: |
-          cd packages/cli
-          npm publish --provenance --access public
+          PACKAGE="@devbolt/cli"
+          VERSION=$(node -p "require('./packages/cli/package.json').version")
+          echo "Checking $PACKAGE@$VERSION"
+          if npm view "$PACKAGE@$VERSION" > /dev/null 2>&1; then
+            echo "$PACKAGE@$VERSION already exists on npm, skipping publish"
+          else
+            echo "Publishing $PACKAGE@$VERSION"
+            cd packages/cli
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  ###########################################################################
+  # PyPI Publish (only upload if version is NOT on PyPI)
+  ###########################################################################
   publish-pypi:
     name: Publish to PyPI
     runs-on: ubuntu-latest
@@ -300,12 +330,30 @@ jobs:
         run: |
           pip install build twine
 
+      - name: Check if PyPI version exists
+        id: pypi_check
+        run: |
+          cd packages/sdk-python
+          VERSION=$(python -c "import tomllib; data = tomllib.load(open('pyproject.toml', 'rb')); print(data['project']['version'])")
+          echo "Found version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          if pip index versions devbolt 2>/dev/null | grep -q "($VERSION)"; then
+            echo "exists=yes" >> $GITHUB_OUTPUT
+            echo "Version $VERSION already exists on PyPI"
+          else
+            echo "exists=no" >> $GITHUB_OUTPUT
+            echo "Version $VERSION not found on PyPI, will publish"
+          fi
+
       - name: Build package
+        if: steps.pypi_check.outputs.exists == 'no'
         run: |
           cd packages/sdk-python
           python -m build
 
       - name: Publish to PyPI
+        if: steps.pypi_check.outputs.exists == 'no'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
