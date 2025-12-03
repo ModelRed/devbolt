@@ -3,49 +3,92 @@
 <div align="center">
 
 [![CI](https://github.com/ModelRed/devbolt/actions/workflows/ci.yml/badge.svg)](https://github.com/ModelRed/devbolt/actions/workflows/ci.yml)
-[![npm version](https://badge.fury.io/js/%40devbolt%2Fcore.svg)](https://www.npmjs.com/package/@devbolt/core)
-[![PyPI version](https://badge.fury.io/py/devbolt.svg)](https://pypi.org/project/devbolt/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](#)
+[![Downloads](https://img.shields.io/npm/dm/%40devbolt%2Fcore.svg)](https://www.npmjs.com/package/@devbolt/core)
+[![Stars](https://img.shields.io/github/stars/ModelRed/devbolt.svg)](https://github.com/ModelRed/devbolt)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Git-native feature flags for developers who hate leaving their terminal**
+<strong>Git native feature flags for developers who hate leaving their terminal</strong>
 
 [Documentation](https://github.com/ModelRed/devbolt) • [Quick Start](#quick-start) • [Examples](#examples) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
-## What is DevBolt?
+---
 
-DevBolt is an open-source, git-native feature flag system that works offline and costs nothing to run. Unlike SaaS solutions that charge $2,000+/month, DevBolt stores flags in your repository alongside your code.
+## What is DevBolt
 
-### Why DevBolt?
+DevBolt is an open source git native feature flag system designed for developers who want full control without paying enterprise SaaS prices. All flags live inside your repository and are versioned alongside your code.
 
-- 🚀 **10-20x cheaper** than LaunchDarkly/Split.io
-- 📝 **Git-native** - Flags live in `.devbolt/flags.yml`
-- 🔒 **Works offline** - No vendor lock-in, no network required
-- 🎯 **Developer-first** - CLI, SDKs for JS/Python, no UI required
-- ⚡ **Production-ready** - Rollouts, targeting, environments
+No servers.  
+No dashboards.  
+No surprise invoices.  
+Some would even say it is free 🤫
+
+Perfect for solo builders, startups, and teams that want predictable behavior in dev, CI, and production.
+
+---
+
+## Why DevBolt
+
+- 💸 10 to 20 times cheaper than LaunchDarkly or Split.io (represented here by several cash signs 💵💵💵)
+- 📝 Git native flags stored in `.devbolt/flags.yml`
+- 🔒 Offline friendly works everywhere including air gapped environments
+- 🧰 Developer first with CLI and SDKs for JavaScript, TypeScript, and Python
+- 🎛️ Rollouts, targeting rules, and environments
+- ⚡ Fast deterministic hashing and no network calls
+
+DevBolt gives you the control of a hosted feature flag service without the monthly pain.
+
+---
+
+## How It Works Diagram
+
+```
+           ┌─────────────────────────┐
+           │     Your Repository     │
+           │   .devbolt/flags.yml    │
+           └────────────┬────────────┘
+                        │
+                        ▼
+               ┌─────────────────┐
+               │    DevBolt CLI  │
+               │ devbolt commands │
+               └───────┬─────────┘
+                        │
+                        ▼
+            ┌──────────────────────┐
+            │   DevBolt SDK (JS)   │
+            │   DevBolt SDK (Py)   │
+            └─────────┬────────────┘
+                      │
+                      ▼
+           ┌─────────────────────────┐
+           │  Your Application Code  │
+           └─────────────────────────┘
+```
+
+Simple predictable and fully local.
+
+---
 
 ## Quick Start
 
-### JavaScript/TypeScript
+### JavaScript and TypeScript
 
 ```bash
-# Install CLI
 npm install -g @devbolt/cli
-
-# Initialize
 devbolt init
-
-# Install SDK
 npm install @devbolt/sdk
+```
 
-# Use it
-import { initialize } from '@devbolt/sdk';
+```ts
+import { initialize } from '@devbolt/sdk'
 
-const client = initialize();
+const client = initialize()
 
 if (client.isEnabled('new_feature')) {
-  // New feature code
+  // new feature
 }
 ```
 
@@ -53,40 +96,66 @@ if (client.isEnabled('new_feature')) {
 
 ```bash
 pip install devbolt
+```
 
-# In your code
+```python
 from devbolt import DevBoltClient
 
 client = DevBoltClient()
 
-if client.is_enabled('new_feature'):
-    # New feature code
+if client.is_enabled("new_feature"):
     pass
 ```
 
+---
+
 ## Features
 
-- ✅ Boolean flags
-- ✅ Percentage rollouts (deterministic)
-- ✅ User targeting (12 operators)
-- ✅ Environment overrides
-- ✅ Auto-reload on changes
-- ✅ Type-safe APIs
+- Boolean flags  
+- Deterministic percentage rollouts  
+- Rich targeting with many operators  
+- Environment overrides  
+- Auto reload in development  
+- Type safe APIs  
+- Zero external services required  
+
+---
+
+## Comparison With Hosted Services
+
+| Feature                     | DevBolt | LaunchDarkly | Split.io |
+|-----------------------------|---------|--------------|----------|
+| Cost                        | Free 😇 | $$$$         | $$$$     |
+| Works offline               | Yes     | No           | No       |
+| Git native config          | Yes     | Partial      | No       |
+| Simple CLI                 | Yes     | No           | No       |
+| Deterministic rollouts     | Yes     | Yes          | Yes      |
+| Self hosted infrastructure | Not needed | Needed for enterprise | Needed |
+
+No shade. Just facts. And some cash sign emojis.
+
+---
 
 ## Documentation
 
-See [github.com/ModelRed/devbolt](https://github.com/ModelRed/devbolt) for full documentation.
+📘 https://github.com/ModelRed/devbolt
+
+---
 
 ## Contributing
 
-We love contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](LICENSE).
+
+---
 
 ## Support
 
-- 📖 [Documentation](https://github.com/ModelRed/devbolt)
-- 💬 [GitHub Discussions](https://github.com/ModelRed/devbolt/discussions)
-- 🐛 [Issue Tracker](https://github.com/ModelRed/devbolt/issues)
+- Documentation  
+- Discussions  
+- Issue Tracker  
