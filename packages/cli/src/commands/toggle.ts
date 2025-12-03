@@ -46,7 +46,12 @@ export function toggleCommand(
       );
     } else {
       // Global toggle
-      const newState = state !== undefined ? state : !flag.enabled;
+      const currentEnabled =
+        typeof flag.enabled === "boolean"
+          ? flag.enabled
+          : Boolean(flag.enabled);
+
+      const newState = state !== undefined ? state : !currentEnabled;
 
       configManager.updateFlag(flagName, { enabled: newState });
 

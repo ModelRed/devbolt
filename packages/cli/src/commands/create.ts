@@ -76,9 +76,11 @@ export async function createCommand(
     rolloutPercentage = answers.rolloutPercentage;
   }
 
+  const normalizedEnabled = typeof enabled === "boolean" ? enabled : true;
+
   // Build flag config
   const flagConfig: FlagConfig = {
-    enabled: enabled ?? true,
+    enabled: normalizedEnabled,
     description: description ?? "",
   };
 

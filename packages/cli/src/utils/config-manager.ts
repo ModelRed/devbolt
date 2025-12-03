@@ -67,7 +67,10 @@ export class ConfigManager {
    */
   private flagConfigToPlainObject(config: FlagConfig): Record<string, any> {
     const obj: Record<string, any> = {
-      enabled: config.enabled,
+      enabled:
+        typeof config.enabled === "boolean"
+          ? config.enabled
+          : Boolean(config.enabled),
     };
 
     if (config.description) {
@@ -133,14 +136,24 @@ export class ConfigManager {
   updateFlag(flagName: string, updates: Partial<FlagConfig>): void {
     const config = this.read();
 
-    if (!config[flagName]) {
+    const existing = config[flagName];
+    if (!existing) {
       throw new Error(`Flag "${flagName}" not found`);
     }
 
-    config[flagName] = {
-      ...config[flagName],
+    const merged = {
+      ...existing,
       ...updates,
     };
+
+    // Normalize enabled to a strict boolean
+    const enabledRaw =
+      updates.enabled !== undefined ? updates.enabled : existing.enabled;
+
+    (merged as FlagConfig).enabled =
+      typeof enabledRaw === "boolean" ? enabledRaw : Boolean(enabledRaw);
+
+    config[flagName] = merged as FlagConfig;
 
     this.write(config);
   }
