@@ -1,0 +1,43 @@
+{
+  "name": "@devbolt/core",
+  "version": "1.0.0",
+  "description": "Core evaluation engine for DevBolt feature flags",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist *.tsbuildinfo"
+  },
+  "keywords": [
+    "feature-flags",
+    "feature-toggles",
+    "flags",
+    "devbolt"
+  ],
+  "author": "DevBolt",
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  }
+}

@@ -1,0 +1,77 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-title:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR title format
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+
+  size-check:
+    name: Check Bundle Size
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Check package sizes
+        run: |
+          echo "Checking bundle sizes..."
+          du -sh packages/*/dist
+
+          # Check core package size (should be < 100KB)
+          CORE_SIZE=$(du -sk packages/core/dist | cut -f1)
+          if [ $CORE_SIZE -gt 100 ]; then
+            echo "Warning: Core package is larger than 100KB"
+          fi
+
+  breaking-changes:
+    name: Detect Breaking Changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for breaking changes in PR description
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          if echo "$PR_BODY" | grep -qi "BREAKING CHANGE"; then
+            echo "⚠️ This PR contains breaking changes!"
+            echo "breaking_change=true" >> $GITHUB_OUTPUT
+          fi
