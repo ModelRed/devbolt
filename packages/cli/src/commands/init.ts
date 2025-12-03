@@ -7,40 +7,52 @@ import {
   displayWarning,
 } from "../utils/display.js";
 
+interface InitOptions {
+  yes?: boolean;
+  noExamples?: boolean;
+}
+
 /**
  * Initialize DevBolt in the current directory
  */
-export async function initCommand(): Promise<void> {
+export async function initCommand(options: InitOptions = {}): Promise<void> {
   const configManager = new ConfigManager();
 
   // Check if config already exists
   if (configManager.exists()) {
     displayWarning("DevBolt config already exists at .devbolt/flags.yml");
 
-    const { overwrite } = await inquirer.prompt<{ overwrite: boolean }>([
-      {
-        type: "confirm",
-        name: "overwrite",
-        message: "Do you want to overwrite it?",
-        default: false,
-      },
-    ]);
+    if (!options.yes) {
+      const { overwrite } = await inquirer.prompt<{ overwrite: boolean }>([
+        {
+          type: "confirm",
+          name: "overwrite",
+          message: "Do you want to overwrite it?",
+          default: false,
+        },
+      ]);
 
-    if (!overwrite) {
-      console.log("Initialization cancelled");
-      return;
+      if (!overwrite) {
+        console.log("Initialization cancelled");
+        return;
+      }
     }
   }
 
-  // Ask if user wants example flags
-  const { createExample } = await inquirer.prompt<{ createExample: boolean }>([
-    {
-      type: "confirm",
-      name: "createExample",
-      message: "Create example flags?",
-      default: true,
-    },
-  ]);
+  // Determine if we should create examples
+  let createExample = !options.noExamples;
+
+  if (!options.yes && !options.noExamples) {
+    const response = await inquirer.prompt<{ createExample: boolean }>([
+      {
+        type: "confirm",
+        name: "createExample",
+        message: "Create example flags?",
+        default: true,
+      },
+    ]);
+    createExample = response.createExample;
+  }
 
   const config = createExample
     ? {

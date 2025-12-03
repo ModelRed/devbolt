@@ -17,13 +17,17 @@ const program = new Command();
 program
   .name("devbolt")
   .description("DevBolt - Git-native feature flags for developers")
-  .version("0.1.0");
+  .version("1.0.0");
 
 // Init command
 program
   .command("init")
-  .description("Initialize DevBolt in the current directory")
-  .action(initCommand);
+  .description("Initialize DevBolt configuration")
+  .option("-y, --yes", "Skip all prompts and use defaults")
+  .option("--no-examples", "Create empty config without example flags")
+  .action((options) => {
+    initCommand(options);
+  });
 
 // Create command
 program
