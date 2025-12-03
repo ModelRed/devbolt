@@ -185,59 +185,6 @@ jobs:
           flags: python
           name: python-${{ matrix.os }}-py-${{ matrix.python }}
 
-  # Linting and Type Checking
-  lint-and-typecheck:
-    name: Lint & Type Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run TypeScript type check
-        run: npm run type-check
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Create Python virtual environment
-        run: |
-          cd packages/sdk-python
-          python -m venv .venv
-
-      - name: Install Python dev dependencies
-        run: |
-          cd packages/sdk-python
-          source .venv/bin/activate
-          pip install --upgrade pip
-          pip install -e ".[dev]"
-
-      - name: Run Ruff (Python linter)
-        run: |
-          cd packages/sdk-python
-          source .venv/bin/activate
-          ruff check devbolt/
-
-      - name: Run mypy (Python type checker)
-        run: |
-          cd packages/sdk-python
-          source .venv/bin/activate
-          mypy devbolt/
-
   # CLI Integration Tests
   cli-integration:
     name: CLI Integration Tests

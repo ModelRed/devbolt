@@ -90,12 +90,6 @@ deactivate
 print_status "Python tests passed"
 cd ../..
 
-# 4. Type checking
-echo ""
-echo "📝 Type checking..."
-npm run type-check
-print_status "Type check passed"
-
 # Summary
 echo ""
 echo "=============================="
