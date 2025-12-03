@@ -1,6 +1,6 @@
 {
   "name": "@devbolt/sdk",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "JavaScript/TypeScript SDK for DevBolt feature flags",
   "type": "module",
   "main": "./dist/index.js",
